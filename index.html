@@ -315,8 +315,9 @@
 
 </div>
 
-  <header>
-    <div id="modulo-vendas" class="module-panel active">
+ <div id="modulo-vendas" class="module-panel active">
+
+<header>
     <section class="hero glass">
       <div class="badge">✦ Inteligência Estratégica Comercial</div>
       <h1 id="pageTitle">Resultado Maio 2026</h1>
@@ -1219,7 +1220,7 @@ function renderTables(mes){
 }
 
 function renderEmptyCharts(){
-  ["categoriasChart","barBlocos","gaugeGeral","rankingOrigem","ativacoesChart"].forEach(id => {
+  ["categoriasChart","barBlocos","gaugeGeral","ativacoesChart"].forEach(id => {
     const ctx = document.getElementById(id);
     charts[id] = new Chart(ctx, {
       type:"bar",
