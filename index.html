@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Executivo - Resultado Mensal</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg1:#050816; --bg2:#111827; --card:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.14); --text:#f8fafc; --muted:#94a3b8;
+      --blue:#38bdf8; --purple:#a855f7; --green:#22c55e;
+      --yellow:#facc15; --red:#ef4444;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; font-family:Inter,Segoe UI,Arial,sans-serif; }
+
+    body {
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 30%),
+        radial-gradient(circle at top right, rgba(168,85,247,.24), transparent 35%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      padding:28px;
+    }
+
+    .dashboard { max-width:1500px; margin:auto; }
+
+    header {
+      display:grid;
+      grid-template-columns:1.35fr .95fr;
+      gap:24px;
+      margin-bottom:24px;
+    }
+
+    .glass {
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      backdrop-filter:blur(20px);
+      box-shadow:0 24px 80px rgba(0,0,0,.35);
+    }
+
+    .hero, .executive-note, .card, .chart-card, .table-card, .tabs-card { padding:26px; }
+
+    .badge {
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(56,189,248,.12);
+      color:var(--blue);
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    h1 {
+      font-size:clamp(30px,4vw,50px);
+      line-height:1.05;
+      margin-bottom:14px;
+    }
+
+    h2 { font-size:20px; margin-bottom:8px; }
+    h3 { font-size:16px; color:var(--muted); margin-bottom:12px; }
+
+    .subtitle, .insight, .muted {
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .filters {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .filters label {
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    select {
+      appearance:none;
+      border:none;
+      outline:none;
+      color:var(--text);
+      background:rgba(15,23,42,.88);
+      border:1px solid rgba(56,189,248,.35);
+      border-radius:14px;
+      padding:11px 42px 11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      min-width:180px;
+    }
+
+    .tabs-card {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:24px;
+    }
+
+    .tab-btn {
+      border:none;
+      cursor:pointer;
+      color:var(--muted);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      color:var(--text);
+      background:rgba(56,189,248,.15);
+      border-color:rgba(56,189,248,.48);
+    }
+
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    .kpis {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .card { transition:.25s ease; }
+    .card:hover { transform:translateY(-4px); border-color:rgba(56,189,248,.45); }
+
+    .label { color:var(--muted); font-size:13px; margin-bottom:10px; }
+    .value { font-size:30px; font-weight:800; letter-spacing:-.03em; }
+    .delta { margin-top:12px; font-size:13px; color:var(--muted); }
+
+    .status {
+      display:inline-flex;
+      margin-top:12px;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .green { background:rgba(34,197,94,.14); color:var(--green); }
+    .yellow { background:rgba(250,204,21,.14); color:var(--yellow); }
+    .red { background:rgba(239,68,68,.14); color:var(--red); }
+    .blue { background:rgba(56,189,248,.14); color:var(--blue); }
+    .purple { background:rgba(168,85,247,.14); color:var(--purple); }
+
+    .grid {
+      display:grid;
+      grid-template-columns:1.25fr .85fr;
+      gap:22px;
+      margin-bottom:22px;
+    }
+
+    .grid-3 {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    canvas { width:100%!important; max-height:380px; }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+    }
+
+    th,td {
+      padding:13px 12px;
+      text-align:left;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+    }
+
+    th { color:var(--muted); font-weight:600; }
+    td { color:#e5e7eb; }
+
+    .section { margin-bottom:24px; }
+
+    .pill {
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .empty-state {
+      padding:40px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    @media(max-width:1100px){
+      header,.grid { grid-template-columns:1fr; }
+      .kpis,.grid-3 { grid-template-columns:repeat(2,1fr); }
+    }
+
+    @media(max-width:700px){
+      body { padding:16px; }
+      .kpis,.grid-3 { grid-template-columns:1fr; }
+      th,td { font-size:12px; padding:10px 8px; }
+      .tabs-card { padding:18px; }
+    }
+  </style>
+</head>
+
+<body>
+<main class="dashboard">
+
+  <header>
+    <section class="hero glass">
+      <div class="badge">✦ Inteligência Estratégica Comercial</div>
+      <h1 id="pageTitle">Resultado Maio 2026</h1>
+      <p class="subtitle">
+        Dashboard executivo com seleção mensal, visão consolidada de metas, realizado, categorias, renovações, vendas, campanha e ativações.
+      </p>
+
+      <div class="filters">
+        <label for="monthSelect">Selecionar mês</label>
+        <select id="monthSelect">
+          <option value="janeiro">Janeiro</option>
+          <option value="fevereiro">Fevereiro</option>
+          <option value="marco">Março</option>
+          <option value="abril">Abril</option>
+          <option value="maio" selected>Maio</option>
+          <option value="junho">Junho</option>
+          <option value="julho">Julho</option>
+          <option value="agosto">Agosto</option>
+          <option value="setembro">Setembro</option>
+          <option value="outubro">Outubro</option>
+          <option value="novembro">Novembro</option>
+          <option value="dezembro">Dezembro</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="executive-note glass">
+      <h3>Leitura executiva</h3>
+      <p id="executiveSummary" class="subtitle"></p>
+    </section>
+  </header>
+
+  <nav class="tabs-card glass">
+    <button class="tab-btn active" data-tab="executivo">Executivo</button>
+    <button class="tab-btn" data-tab="renovacoes">Renovações</button>
+    <button class="tab-btn" data-tab="vendas">Vendas</button>
+    <button class="tab-btn" data-tab="vamo">Vamo Junto</button>
+    <button class="tab-btn" data-tab="ativacoes">Ativações</button>
+  </nav>
+
+  <section id="executivo" class="tab-panel active">
+    <section class="kpis">
+      <div class="card glass">
+        <div class="label">Meta Geral</div>
+        <div class="value" id="metaGeral"></div>
+      </div>
+
+      <div class="card glass">
+        <div class="label">Total Realizado</div>
+        <div class="value" id="totalRealizado"></div>
+      </div>
+
+      <div class="card glass">
+        <div class="label">Atingimento Geral</div>
+        <div class="value" id="atingimentoGeral"></div>
+        <span id="statusGeral" class="status"></span>
+      </div>
+
+      <div class="card glass">
+        <div class="label">Diferença vs Meta</div>
+        <div class="value" id="diferencaGeral"></div>
+        <div class="delta" id="diferencaPct"></div>
+      </div>
+    </section>
+
+    <section class="chart-card glass section">
+      <h2>Resultado por Categoria</h2>
+      <p class="insight">Distribuição do realizado por categoria comercial.</p>
+      <canvas id="categoriasChart"></canvas>
+    </section>
+
+    <section class="grid">
+      <div class="chart-card glass">
+        <h2>Meta vs Realizado por Bloco</h2>
+        <p class="insight">Comparativo executivo dos principais blocos de meta.</p>
+        <canvas id="barBlocos"></canvas>
+      </div>
+
+      <div class="chart-card glass">
+        <h2>Gauge de Atingimento Geral</h2>
+        <p class="insight">Resultado consolidado da operação no mês.</p>
+        <canvas id="gaugeGeral"></canvas>
+      </div>
+    </section>
+
+    <section class="grid-3">
+      <div class="card glass">
+        <div class="label">Meta CLIPP</div>
+        <div class="value" id="metaClipp"></div>
+        <div class="delta">Participação principal da meta geral</div>
+      </div>
+
+      <div class="card glass">
+        <div class="label">Meta SMALL</div>
+        <div class="value" id="metaSmall"></div>
+        <div class="delta">Bloco complementar de receita</div>
+      </div>
+
+      <div class="card glass">
+        <div class="label">Ativações Totais</div>
+        <div class="value" id="ativacoesTotais"></div>
+        <span id="statusAtivacoes" class="status"></span>
+      </div>
+    </section>
+
+    <section class="chart-card glass section">
+      <h2>Ranking de Atingimento por Origem</h2>
+      <p class="insight">Ranking das principais origens por percentual de atingimento.</p>
+      <canvas id="rankingOrigem"></canvas>
+    </section>
+  </section>
+
+  <section id="renovacoes" class="tab-panel">
+    <section class="table-card glass section">
+      <h2>Renovações e Mensalidades</h2>
+      <p class="insight">Detalhamento do bloco de renovações por linha e origem.</p>
+      <table id="renovacoesTable"></table>
+    </section>
+  </section>
+
+  <section id="vendas" class="tab-panel">
+    <section class="table-card glass section">
+      <h2>Vendas por Origem</h2>
+      <p class="insight">Detalhamento das vendas Full, Plugin, Usuário e Hunter.</p>
+      <table id="vendasTable"></table>
+    </section>
+  </section>
+
+  <section id="vamo" class="tab-panel">
+    <section class="table-card glass section">
+      <h2>Campanha Vamo Junto</h2>
+      <p class="insight">Resultado mensal da campanha por linha.</p>
+      <table id="vamoJuntoTable"></table>
+    </section>
+  </section>
+
+  <section id="ativacoes" class="tab-panel">
+    <section class="chart-card glass section">
+      <h2>Ativações</h2>
+      <p class="insight">Volume realizado versus meta de ativações por linha.</p>
+      <canvas id="ativacoesChart"></canvas>
+    </section>
+
+    <section class="table-card glass section">
+      <h2>Ativações por Linha</h2>
+      <p class="insight">Acompanhamento de revenda, usuário, total, meta e falta/sobra.</p>
+      <table id="ativacoesTable"></table>
+    </section>
+  </section>
+
+</main>
+
+<script>
+const dadosPorMes = {
+  janeiro: {
+    nome: "Janeiro",
+    resumoGeral: {
+      metaGeral: 4117502.52,
+      metaClipp: 3368462.17,
+      metaSmall: 729540.35,
+      totalRealizado: 3906576.63
+    },
+    categoriasData: [],
+    renovacoesData: [
+      { linha:"CLIPP", origem:"Renovação Desktop Anual", meta:2569243.81, realizado:2331966.48 },
+      { linha:"CLIPP", origem:"Renovação Desktop Mensal", meta:106166.58, realizado:130795.19 },
+      { linha:"CLIPP", origem:"Renovação Web Anual", meta:193431.54, realizado:152267.46 },
+      { linha:"CLIPP", origem:"Renovação Web Mensal", meta:14974.58, realizado:25605.93 },
+      { linha:"CLIPP", origem:"Plugin Renovação", meta:119053.05, realizado:143518.65 },
+      { linha:"SMALL", origem:"Renovação Desktop Anual", meta:603859.20, realizado:638045.40 },
+      { linha:"SMALL", origem:"Renovação Desktop Mensal", meta:6771.68, realizado:9033.44 },
+      { linha:"SMALL", origem:"Renovação Web Anual", meta:6610.72, realizado:12724.50 },
+      { linha:"SMALL", origem:"Renovação Web Mensal", meta:712.02, realizado:944.00 },
+      { linha:"SMALL", origem:"Plugin Renovação", meta:28828.40, realizado:29289.58 }
+    ],
+    vendasData: [
+      { linha:"CLIPP", origem:"Full Revenda", meta:216000.00, realizado:225174.55 },
+      { linha:"CLIPP", origem:"Full Plugin", meta:39567.92, realizado:89593.70 },
+      { linha:"CLIPP", origem:"Full Usuário", meta:42750.00, realizado:32310.90 },
+      { linha:"CLIPP", origem:"Hunter | Full Revenda", meta:25000.00, realizado:25493.47 },
+      { linha:"CLIPP", origem:"Hunter | Full Usuário", meta:15000.00, realizado:23028.00 },
+      { linha:"SMALL", origem:"Full Revenda", meta:43000.00, realizado:47885.15 },
+      { linha:"SMALL", origem:"Full Plugin", meta:23000.00, realizado:83.68 },
+      { linha:"SMALL", origem:"Full Usuário", meta:10000.00, realizado:3305.00 }
+    ],
+    vamoJuntoData: [
+      { linha:"CLIPP", origem:"Vamo Junto CLIPP", meta:27274.69, realizado:27274.69 },
+      { linha:"SMALL", origem:"Vamo Junto SMALL", meta:6758.33, realizado:6758.33 }
+    ],
+    ativacoesData: [
+      { linha:"CLIPP", revenda:null, usuario:null, total:1052, meta:900 },
+      { linha:"SMALL", revenda:null, usuario:null, total:246, meta:200 },
+      { linha:"TOTAL", revenda:null, usuario:null, total:1298, meta:1100 }
+    ]
+  },
+
+  fevereiro: {
+    nome: "Fevereiro",
+    resumoGeral: null,
+    categoriasData: [],
+    renovacoesData: [
+      { linha:"CLIPP", origem:"Renovação Desktop Anual", meta:2161823.69, realizado:2212480.13 },
+      { linha:"CLIPP", origem:"Renovação Desktop Mensal", meta:131478.31, realizado:112763.89 },
+      { linha:"CLIPP", origem:"Renovação Web Anual", meta:194465.06, realizado:159507.65 },
+      { linha:"CLIPP", origem:"Renovação Web Mensal", meta:15012.53, realizado:18817.08 },
+      { linha:"CLIPP", origem:"Plugin Renovação", meta:112544.80, realizado:167933.97 },
+      { linha:"SMALL", origem:"Renovação Desktop Anual", meta:580389.60, realizado:669229.60 },
+      { linha:"SMALL", origem:"Renovação Desktop Mensal", meta:11660.56, realizado:9754.91 },
+      { linha:"SMALL", origem:"Renovação Web Anual", meta:18050.32, realizado:13980.05 },
+      { linha:"SMALL", origem:"Renovação Web Mensal", meta:661.15, realizado:609.20 },
+      { linha:"SMALL", origem:"Plugin Renovação", meta:34729.00, realizado:39349.29 }
+    ],
+    vendasData: [
+      { linha:"CLIPP", origem:"Full Revenda", meta:216000.00, realizado:179261.30 },
+      { linha:"CLIPP", origem:"Full Plugin", meta:51000.00, realizado:81335.00 },
+      { linha:"CLIPP", origem:"Full Usuário", meta:42750.00, realizado:32933.00 },
+      { linha:"CLIPP", origem:"Hunter | Full Revenda", meta:10000.00, realizado:6682.60 },
+      { linha:"CLIPP", origem:"Hunter | Full Usuário", meta:20000.00, realizado:6633.18 },
+      { linha:"SMALL", origem:"Full Revenda", meta:54000.00, realizado:41709.31 },
+      { linha:"SMALL", origem:"Full Plugin", meta:4000.00, realizado:436.20 },
+      { linha:"SMALL", origem:"Full Usuário", meta:10000.00, realizado:4792.00 }
+    ],
+    vamoJuntoData: [
+      { linha:"CLIPP", origem:"Vamo Junto CLIPP", meta:35105.89, realizado:35105.89 },
+      { linha:"SMALL", origem:"Vamo Junto SMALL", meta:6758.33, realizado:6758.33 }
+    ],
+    ativacoesData: [],
+    antecipacoesData: [
+      { consultor:"Patricia", valor:23060.00 },
+      { consultor:"Luana", valor:19316.80 },
+      { consultor:"Dafne", valor:15619.00 },
+      { consultor:"Eduarda", valor:21714.00 },
+      { consultor:"Odete", valor:0 },
+      { consultor:"Dionata", valor:34686.00 },
+      { consultor:"Olga", valor:21557.00 },
+      { consultor:"Maria", valor:4193.00 },
+      { consultor:"Marize", valor:36986.50 },
+      { consultor:"Claudete", valor:0 },
+      { consultor:"Sabrina", valor:1290.00 },
+      { consultor:"Shariane", valor:1854.00 },
+      { consultor:"Denise", valor:0 },
+      { consultor:"Andressa", valor:0 },
+      { consultor:"Marceli", valor:6071.00 },
+      { consultor:"Ana", valor:0 }
+    ]
+  },
+
+  marco: {
+    nome: "Março",
+    resumoGeral: {
+      metaGeral: 3289537.45,
+      metaClipp: 2535636.72,
+      metaSmall: 744450.73,
+      totalRealizado: 3081008.41
+    },
+    categoriasData: [],
+    renovacoesData: [
+      { linha:"CLIPP", origem:"Renovação 12 Meses Revendas", meta:1299621.20, realizado:1129768.25 },
+      { linha:"CLIPP", origem:"Renovação 12 Meses Usuário Final", meta:620600.03, realizado:545145.00 },
+      { linha:"CLIPP", origem:"Mensalidades", meta:143200.00, realizado:135958.04 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Revendas", meta:473936.24, realizado:502857.80 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Usuário Final", meta:165256.16, realizado:117281.20 },
+      { linha:"SMALL", origem:"Mensalidades", meta:8000.00, realizado:10850.07 }
+    ],
+    vendasData: [
+      { linha:"CLIPP", origem:"Full Revenda", meta:216000.00, realizado:225615.64 },
+      { linha:"CLIPP", origem:"Full Plugin", meta:51000.00, realizado:86449.84 },
+      { linha:"CLIPP", origem:"Full Usuário", meta:42750.00, realizado:56641.30 },
+      { linha:"CLIPP", origem:"Renovação Plugin", meta:97359.60, realizado:119598.98 },
+      { linha:"CLIPP", origem:"Hunter | Full Revenda", meta:10000.00, realizado:12000.00 },
+      { linha:"CLIPP", origem:"Hunter | Full Usuário", meta:20000.00, realizado:5466.00 },
+      { linha:"SMALL", origem:"Full Revenda", meta:54000.00, realizado:56161.66 },
+      { linha:"SMALL", origem:"Full Plugin + Renovação Plugin", meta:26500.00, realizado:24837.21 },
+      { linha:"SMALL", origem:"Full Usuário", meta:10000.00, realizado:10914.80 }
+    ],
+    vamoJuntoData: [
+      { linha:"CLIPP", origem:"Vamo Junto CLIPP", meta:35105.89, realizado:52170.29 },
+      { linha:"SMALL", origem:"Vamo Junto SMALL", meta:6758.33, realizado:6758.33 }
+    ],
+    ativacoesData: [
+      { linha:"CLIPP", revenda:1067, usuario:70, total:1137, meta:1000 },
+      { linha:"SMALL", revenda:219, usuario:4, total:223, meta:250 },
+      { linha:"TOTAL", revenda:1286, usuario:74, total:1360, meta:1250 }
+    ]
+  },
+
+  abril: {
+    nome: "Abril",
+    resumoGeral: {
+      metaGeral: 3071601.63,
+      metaClipp: 2501038.62,
+      metaSmall: 570563.01,
+      totalRealizado: 2865243.97
+    },
+    categoriasData: [],
+    renovacoesData: [
+      { linha:"CLIPP", origem:"Renovação 12 Meses Revendas", meta:1301810.24, realizado:1168595.74 },
+      { linha:"CLIPP", origem:"Renovação 12 Meses Usuário Final", meta:577772.50, realizado:717431.31 },
+      { linha:"CLIPP", origem:"Mensalidades", meta:145600.00, realizado:144378.85 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Revendas", meta:351341.16, realizado:376247.15 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Usuário Final", meta:113963.52, realizado:104923.00 },
+      { linha:"SMALL", origem:"Mensalidades", meta:8000.00, realizado:10821.58 }
+    ],
+    vendasData: [
+      { linha:"CLIPP", origem:"Full Revenda", meta:216000.00, realizado:231069.78 },
+      { linha:"CLIPP", origem:"Full Plugin", meta:81000.00, realizado:71115.60 },
+      { linha:"CLIPP", origem:"Full Usuário", meta:42750.00, realizado:35601.00 },
+      { linha:"CLIPP", origem:"Renovação Plugin", meta:91000.00, realizado:112788.19 },
+      { linha:"CLIPP", origem:"Hunter | Full Revenda", meta:5000.00, realizado:8000.00 },
+      { linha:"CLIPP", origem:"Hunter | Full Usuário", meta:5000.00, realizado:0 },
+      { linha:"SMALL", origem:"Full Revenda", meta:54000.00, realizado:46820.88 },
+      { linha:"SMALL", origem:"Full Plugin + Renovação Plugin", meta:26500.00, realizado:24108.87 },
+      { linha:"SMALL", origem:"Full Usuário", meta:10000.00, realizado:4228.80 }
+    ],
+    vamoJuntoData: [
+      { linha:"CLIPP", origem:"Vamo Junto CLIPP", meta:35105.89, realizado:35105.89 },
+      { linha:"SMALL", origem:"Vamo Junto SMALL", meta:6758.33, realizado:6758.33 }
+    ],
+    ativacoesData: [],
+    antecipacoesData: [
+      { consultor:"Patricia", valor:26656.00 },
+      { consultor:"Luana", valor:4580.00 },
+      { consultor:"Dafne", valor:38094.79 },
+      { consultor:"Eduarda", valor:22662.00 },
+      { consultor:"Odete", valor:16087.00 },
+      { consultor:"Dionata", valor:21220.90 },
+      { consultor:"Olga", valor:0 },
+      { consultor:"Maria", valor:0 },
+      { consultor:"Marize", valor:29800.00 },
+      { consultor:"Claudete", valor:7160.00 },
+      { consultor:"Sabrina", valor:3708.00 },
+      { consultor:"Shariane", valor:0 },
+      { consultor:"Denise", valor:0 },
+      { consultor:"Andressa", valor:0 },
+      { consultor:"Marceli", valor:0 },
+      { consultor:"Ana", valor:0 },
+      { consultor:"Robertinho", valor:13000.00 }
+    ]
+  },
+
+  maio: {
+    nome: "Maio",
+    resumoGeral: {
+      metaGeral: 3626405.51,
+      metaClipp: 2991453.50,
+      metaSmall: 634952.01,
+      totalRealizado: 3703668.06
+    },
+    categoriasData: [
+      { categoria: "Black", valor: 212542.61 },
+      { categoria: "Bronze", valor: 90507.08 },
+      { categoria: "Diamante", valor: 1024534.65 },
+      { categoria: "Ouro", valor: 334927.70 },
+      { categoria: "Ouro Duplo", valor: 268931.71 },
+      { categoria: "Prata", valor: 405079.74 },
+      { categoria: "Usuário Final", valor: 755943.35 },
+      { categoria: "Indicador", valor: 6044.20 }
+    ],
+    renovacoesData: [
+      { linha:"CLIPP", origem:"Renovação 12 Meses Revendas", meta:1631012.31, realizado:1440851.83 },
+      { linha:"CLIPP", origem:"Renovação 12 Meses Usuário Final", meta:714415.30, realizado:649977.22 },
+      { linha:"CLIPP", origem:"Mensalidades", meta:148000.00, realizado:147302.91 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Revendas", meta:391349.20, realizado:411116.80 },
+      { linha:"SMALL", origem:"Renovação 12 Meses Usuário Final", meta:130696.48, realizado:116365.00 },
+      { linha:"SMALL", origem:"Mensalidades", meta:8200.00, realizado:12660.19 }
+    ],
+    vendasData: [
+      { linha:"CLIPP", origem:"Full Revenda", meta:216000.00, realizado:191807.11 },
+      { linha:"CLIPP", origem:"Full Plugin", meta:81000.00, realizado:75007.86 },
+      { linha:"CLIPP", origem:"Full Usuário", meta:42750.00, realizado:34751.09 },
+      { linha:"CLIPP", origem:"Renovação Plugin", meta:113170.00, realizado:134535.41 },
+      { linha:"CLIPP", origem:"Hunter | Full Revenda", meta:5000.00, realizado:7000.00 },
+      { linha:"CLIPP", origem:"Hunter | Full Usuário", meta:5000.00, realizado:0 },
+      { linha:"SMALL", origem:"Full Revenda", meta:54000.00, realizado:46662.18 },
+      { linha:"SMALL", origem:"Full Plugin + Renovação Plugin", meta:33948.00, realizado:22263.69 },
+      { linha:"SMALL", origem:"Full Usuário", meta:10000.00, realizado:7334.60 }
+    ],
+    vamoJuntoData: [
+      { linha:"CLIPP", origem:"Vamo Junto CLIPP", meta:35105.89, realizado:406273.84 },
+      { linha:"SMALL", origem:"Vamo Junto SMALL", meta:6758.33, realizado:6758.33 }
+    ],
+    ativacoesData: [
+      { linha:"CLIPP", revenda:1069, usuario:35, total:1104, meta:1000 },
+      { linha:"SMALL", revenda:147, usuario:7, total:154, meta:250 },
+      { linha:"TOTAL", revenda:1216, usuario:42, total:1258, meta:1250 }
+    ]
+  },
+
+  junho: { nome:"Junho", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  julho: { nome:"Julho", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  agosto: { nome:"Agosto", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  setembro: { nome:"Setembro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  outubro: { nome:"Outubro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  novembro: { nome:"Novembro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
+  dezembro: { nome:"Dezembro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] }
+};
+
+let charts = {};
+
+const brl = v => (v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
+const num = v => v === null || v === undefined ? "-" : v.toLocaleString("pt-BR");
+const pct = v => `${(v || 0).toFixed(2).replace(".", ",")}%`;
+const soma = arr => arr.reduce((s,r)=>s+(r.realizado || 0),0);
+const somaMeta = arr => arr.reduce((s,r)=>s+(r.meta || 0),0);
+
+function calcAtingido(row){
+  return row.meta ? (row.realizado / row.meta * 100) : 0;
+}
+
+function statusClass(p) {
+  if (p >= 100) return "green";
+  if (p >= 90) return "yellow";
+  return "red";
+}
+
+function statusText(p) {
+  if (p >= 100) return "Meta batida";
+  if (p >= 90) return "Próximo da meta";
+  return "Abaixo da meta";
+}
+
+function destroyCharts(){
+  Object.values(charts).forEach(chart => chart.destroy());
+  charts = {};
+}
+
+function chartBaseOptions() {
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{ labels:{ color:"#cbd5e1", usePointStyle:true }},
+      tooltip:{
+        backgroundColor:"rgba(15,23,42,.96)",
+        titleColor:"#fff",
+        bodyColor:"#cbd5e1",
+        borderColor:"rgba(56,189,248,.35)",
+        borderWidth:1,
+        padding:12
+      }
+    },
+    scales:{
+      x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" }},
+      y:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.06)" }}
+    }
+  };
+}
+
+function makeTable(id, columns, data) {
+  const table = document.getElementById(id);
+
+  if (!data || data.length === 0) {
+    table.innerHTML = `<tbody><tr><td class="empty-state">Sem dados cadastrados para este mês.</td></tr></tbody>`;
+    return;
+  }
+
+  table.innerHTML = `
+    <thead>
+      <tr>${columns.map(c => `<th>${c.label}</th>`).join("")}</tr>
+    </thead>
+    <tbody>
+      ${data.map(row => `
+        <tr>
+          ${columns.map(c => `<td>${c.render(row)}</td>`).join("")}
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+}
+
+function renderDashboard(monthKey){
+  const mes = dadosPorMes[monthKey];
+
+  destroyCharts();
+
+  document.getElementById("pageTitle").textContent = `Resultado ${mes.nome} 2026`;
+
+  if (!mes.resumoGeral) {
+    document.getElementById("executiveSummary").textContent =
+      `${mes.nome} ainda está preparado na estrutura, mas sem dados preenchidos. Basta inserir resumoGeral, renovações, vendas, Vamo Junto e ativações no objeto dadosPorMes.`;
+
+    ["metaGeral","totalRealizado","atingimentoGeral","diferencaGeral","diferencaPct","metaClipp","metaSmall","ativacoesTotais"].forEach(id=>{
+      document.getElementById(id).textContent = "-";
+    });
+
+    document.getElementById("statusGeral").textContent = "Sem dados";
+    document.getElementById("statusGeral").className = "status yellow";
+    document.getElementById("statusAtivacoes").textContent = "Sem dados";
+    document.getElementById("statusAtivacoes").className = "status yellow";
+
+    makeTable("renovacoesTable", [], []);
+    makeTable("vendasTable", [], []);
+    makeTable("vamoJuntoTable", [], []);
+    makeTable("ativacoesTable", [], []);
+
+    renderEmptyCharts();
+    return;
+  }
+
+  const resumo = mes.resumoGeral;
+  const atingimento = resumo.totalRealizado / resumo.metaGeral * 100;
+  const diff = resumo.totalRealizado - resumo.metaGeral;
+  const diffPct = diff / resumo.metaGeral * 100;
+
+  document.getElementById("metaGeral").textContent = brl(resumo.metaGeral);
+  document.getElementById("totalRealizado").textContent = brl(resumo.totalRealizado);
+  document.getElementById("atingimentoGeral").textContent = pct(atingimento);
+  document.getElementById("diferencaGeral").textContent = brl(diff);
+  document.getElementById("diferencaPct").textContent = `${pct(Math.abs(diffPct))} ${diff >= 0 ? "acima" : "abaixo"} da meta`;
+  document.getElementById("metaClipp").textContent = brl(resumo.metaClipp || 0);
+  document.getElementById("metaSmall").textContent = brl(resumo.metaSmall || 0);
+
+  const status = document.getElementById("statusGeral");
+  status.textContent = statusText(atingimento);
+  status.className = `status ${statusClass(atingimento)}`;
+
+  const totalAtivacoes = (mes.ativacoesData || []).find(r => r.linha === "TOTAL");
+  document.getElementById("ativacoesTotais").textContent = totalAtivacoes ? num(totalAtivacoes.total) : "-";
+
+  const statusAtiv = document.getElementById("statusAtivacoes");
+  if (totalAtivacoes) {
+    statusAtiv.textContent = totalAtivacoes.total >= totalAtivacoes.meta ? "Meta superada" : "Abaixo da meta";
+    statusAtiv.className = `status ${totalAtivacoes.total >= totalAtivacoes.meta ? "green" : "red"}`;
+  } else {
+    statusAtiv.textContent = "Sem dados";
+    statusAtiv.className = "status yellow";
+  }
+
+  document.getElementById("executiveSummary").textContent =
+    `Em ${mes.nome}, o resultado consolidado foi de ${brl(resumo.totalRealizado)} frente à meta geral de ${brl(resumo.metaGeral)}. ` +
+    `O atingimento foi de ${pct(atingimento)}, com ${diff >= 0 ? "sobra" : "diferença negativa"} de ${brl(Math.abs(diff))}.`;
+
+  renderTables(mes);
+  renderCharts(mes, atingimento);
+}
+
+function renderTables(mes){
+  makeTable("renovacoesTable", [
+    { label:"Linha", render:r => r.linha },
+    { label:"Origem", render:r => r.origem },
+    { label:"Meta", render:r => brl(r.meta) },
+    { label:"Realizado", render:r => brl(r.realizado) },
+    { label:"% Atingido", render:r => pct(calcAtingido(r)) },
+    { label:"Falta/Sobra", render:r => {
+      const diff = r.realizado - r.meta;
+      return diff >= 0 ? `Sobra ${brl(diff)}` : `Falta ${brl(Math.abs(diff))}`;
+    }},
+    { label:"Status", render:r => `<span class="pill ${statusClass(calcAtingido(r))}">${statusText(calcAtingido(r))}</span>` }
+  ], mes.renovacoesData);
+
+  makeTable("vendasTable", [
+    { label:"Linha", render:r => r.linha },
+    { label:"Origem", render:r => r.origem },
+    { label:"Meta", render:r => brl(r.meta) },
+    { label:"Realizado", render:r => brl(r.realizado) },
+    { label:"% Atingido", render:r => pct(calcAtingido(r)) },
+    { label:"Falta/Sobra", render:r => {
+      const diff = r.realizado - r.meta;
+      return diff >= 0 ? `Sobra ${brl(diff)}` : `Falta ${brl(Math.abs(diff))}`;
+    }},
+    { label:"Status", render:r => `<span class="pill ${statusClass(calcAtingido(r))}">${statusText(calcAtingido(r))}</span>` }
+  ], mes.vendasData);
+
+  makeTable("vamoJuntoTable", [
+    { label:"Linha", render:r => r.linha },
+    { label:"Origem", render:r => r.origem },
+    { label:"Meta", render:r => brl(r.meta) },
+    { label:"Realizado", render:r => brl(r.realizado) },
+    { label:"% Atingido", render:r => pct(calcAtingido(r)) },
+    { label:"Status", render:r => `<span class="pill ${statusClass(calcAtingido(r))}">${statusText(calcAtingido(r))}</span>` }
+  ], mes.vamoJuntoData);
+
+  makeTable("ativacoesTable", [
+    { label:"Linha", render:r => r.linha },
+    { label:"Revenda", render:r => num(r.revenda) },
+    { label:"Usuário", render:r => num(r.usuario) },
+    { label:"Total", render:r => num(r.total) },
+    { label:"Meta", render:r => num(r.meta) },
+    { label:"Falta/Sobra", render:r => {
+      const diff = r.total - r.meta;
+      return diff >= 0 ? `Sobra ${num(diff)}` : `Falta ${num(Math.abs(diff))}`;
+    }},
+    { label:"Status", render:r => `<span class="pill ${r.total >= r.meta ? "green" : "red"}">${r.total >= r.meta ? "Meta batida" : "Abaixo da meta"}</span>` }
+  ], mes.ativacoesData);
+}
+
+function renderEmptyCharts(){
+  ["categoriasChart","barBlocos","gaugeGeral","rankingOrigem","ativacoesChart"].forEach(id => {
+    const ctx = document.getElementById(id);
+    charts[id] = new Chart(ctx, {
+      type:"bar",
+      data:{ labels:["Sem dados"], datasets:[{ label:"Sem dados", data:[0], backgroundColor:"rgba(255,255,255,.12)" }] },
+      options:chartBaseOptions()
+    });
+  });
+}
+
+function renderCharts(mes, atingimento){
+  const categorias = mes.categoriasData && mes.categoriasData.length
+    ? mes.categoriasData
+    : [
+      { categoria:"Renovações", valor:soma(mes.renovacoesData || []) },
+      { categoria:"Vendas", valor:soma(mes.vendasData || []) },
+      { categoria:"Vamo Junto", valor:soma(mes.vamoJuntoData || []) }
+    ];
+
+  charts.categoriasChart = new Chart(document.getElementById("categoriasChart"), {
+    type:"bar",
+    data:{
+      labels:categorias.map(item => item.categoria),
+      datasets:[{
+        label:"Realizado",
+        data:categorias.map(item => item.valor),
+        backgroundColor:"rgba(56,189,248,.55)",
+        borderColor:"#38bdf8",
+        borderWidth:1,
+        borderRadius:12
+      }]
+    },
+    options:{
+      ...chartBaseOptions(),
+      plugins:{
+        ...chartBaseOptions().plugins,
+        tooltip:{
+          ...chartBaseOptions().plugins.tooltip,
+          callbacks:{ label: context => `Realizado: ${brl(context.raw)}` }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" } },
+        y:{ ticks:{ color:"#94a3b8", callback: value => brl(value) }, grid:{ color:"rgba(255,255,255,.06)" } }
+      }
+    }
+  });
+
+  const blocos = [
+    { nome:"Geral", meta:mes.resumoGeral.metaGeral, realizado:mes.resumoGeral.totalRealizado },
+    { nome:"Renovações", meta:somaMeta(mes.renovacoesData || []), realizado:soma(mes.renovacoesData || []) },
+    { nome:"Vendas", meta:somaMeta(mes.vendasData || []), realizado:soma(mes.vendasData || []) },
+    { nome:"Vamo Junto", meta:somaMeta(mes.vamoJuntoData || []), realizado:soma(mes.vamoJuntoData || []) }
+  ];
+
+  charts.barBlocos = new Chart(document.getElementById("barBlocos"), {
+    type:"bar",
+    data:{
+      labels:blocos.map(b=>b.nome),
+      datasets:[
+        { label:"Meta", data:blocos.map(b=>b.meta), backgroundColor:"rgba(168,85,247,.42)", borderColor:"#a855f7", borderWidth:1, borderRadius:12 },
+        { label:"Realizado", data:blocos.map(b=>b.realizado), backgroundColor:"rgba(56,189,248,.55)", borderColor:"#38bdf8", borderWidth:1, borderRadius:12 }
+      ]
+    },
+    options:chartBaseOptions()
+  });
+
+  charts.gaugeGeral = new Chart(document.getElementById("gaugeGeral"), {
+    type:"doughnut",
+    data:{
+      labels:["Atingido","Restante"],
+      datasets:[{
+        data:[Math.min(atingimento,100), Math.max(0,100 - atingimento)],
+        backgroundColor:[atingimento >= 100 ? "#22c55e" : "#facc15","rgba(255,255,255,.08)"],
+        borderWidth:0,
+        cutout:"78%"
+      }]
+    },
+    options:{ responsive:true, plugins:{ legend:{ display:false } } },
+    plugins:[{
+      id:"centerText",
+      afterDraw(chart){
+        const {ctx, chartArea} = chart;
+        ctx.save();
+        ctx.font="800 34px Segoe UI";
+        ctx.fillStyle="#f8fafc";
+        ctx.textAlign="center";
+        ctx.fillText(pct(atingimento), (chartArea.left+chartArea.right)/2, (chartArea.top+chartArea.bottom)/2+10);
+      }
+    }]
+  });
+
+  const ranking = [...(mes.renovacoesData || []), ...(mes.vendasData || []), ...(mes.vamoJuntoData || [])]
+    .map(r => ({...r, atingido:calcAtingido(r)}))
+    .sort((a,b)=>b.atingido-a.atingido)
+    .slice(0,12);
+
+  charts.rankingOrigem = new Chart(document.getElementById("rankingOrigem"), {
+    type:"bar",
+    data:{
+      labels:ranking.map(r=>`${r.linha} | ${r.origem}`),
+      datasets:[{
+        label:"% Atingido",
+        data:ranking.map(r=>r.atingido),
+        backgroundColor:ranking.map(r => r.atingido >= 100 ? "rgba(34,197,94,.58)" : r.atingido >= 90 ? "rgba(250,204,21,.55)" : "rgba(239,68,68,.52)"),
+        borderRadius:12
+      }]
+    },
+    options:{ ...chartBaseOptions(), indexAxis:"y" }
+  });
+
+  const ativacoesSemTotal = (mes.ativacoesData || []).filter(r=>r.linha !== "TOTAL");
+
+  charts.ativacoesChart = new Chart(document.getElementById("ativacoesChart"), {
+    type:"bar",
+    data:{
+      labels:ativacoesSemTotal.length ? ativacoesSemTotal.map(r=>r.linha) : ["Sem dados"],
+      datasets:[
+        { label:"Total", data:ativacoesSemTotal.length ? ativacoesSemTotal.map(r=>r.total) : [0], backgroundColor:"rgba(56,189,248,.55)", borderRadius:12 },
+        { label:"Meta", data:ativacoesSemTotal.length ? ativacoesSemTotal.map(r=>r.meta) : [0], backgroundColor:"rgba(168,85,247,.42)", borderRadius:12 }
+      ]
+    },
+    options:chartBaseOptions()
+  });
+}
+
+document.getElementById("monthSelect").addEventListener("change", e => {
+  renderDashboard(e.target.value);
+});
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+renderDashboard("maio");
+</script>
+</body>
+</html>
