@@ -723,7 +723,312 @@ const dadosPorMes = {
   novembro: { nome:"Novembro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] },
   dezembro: { nome:"Dezembro", resumoGeral:null, categoriasData:[], renovacoesData:[], vendasData:[], vamoJuntoData:[], ativacoesData:[] }
 };
+const churnData = {
+  janeiro: {
+    clipp: {
+      anual: {
+        categoria: [
+          { nome:"Black", churn:14 }, { nome:"Bronze", churn:38 }, { nome:"Diamante", churn:13 },
+          { nome:"Ouro", churn:18 }, { nome:"Ouro Duplo", churn:15 }, { nome:"Prata", churn:21 },
+          { nome:"Usuário", churn:16 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:13 }, { nome:"CLIPP FÁCIL", churn:43 }, { nome:"CLIPP 360", churn:33 },
+          { nome:"CLIPP MEI", churn:38 }, { nome:"CLIPP MEI/CPF", churn:12 }, { nome:"ZWEB", churn:36 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:12 }, { nome:"CLIPP FÁCIL", churn:22 }, { nome:"CLIPP 360", churn:57 },
+          { nome:"CLIPP MEI", churn:57 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:80 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Black", churn:1 }, { nome:"Bronze", churn:20 }, { nome:"Diamante", churn:4 },
+          { nome:"Ouro", churn:7 }, { nome:"Ouro Duplo", churn:7 }, { nome:"Prata", churn:4 },
+          { nome:"Usuário", churn:18 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:2 }, { nome:"CLIPP FÁCIL", churn:8 }, { nome:"CLIPP 360", churn:8 },
+          { nome:"CLIPP MEI", churn:6 }, { nome:"CLIPP MEI/CPF", churn:3 }, { nome:"ZWEB", churn:10 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:14 }, { nome:"CLIPP FÁCIL", churn:0 }, { nome:"CLIPP 360", churn:0 },
+          { nome:"CLIPP MEI", churn:0 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:19 }
+        ]
+      }
+    },
+    small: {
+      anual: {
+        categoria: [
+          { nome:"Bronze", churn:43 }, { nome:"Diamante", churn:9 }, { nome:"Ouro", churn:19 },
+          { nome:"Ouro Duplo", churn:13 }, { nome:"Prata", churn:12 }, { nome:"Usuário", churn:16 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:14 }, { nome:"GO", churn:75 }, { nome:"START", churn:50 }, { nome:"ZWEB", churn:22 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:16 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Bronze", churn:44 }, { nome:"Diamante", churn:20 }, { nome:"Ouro", churn:60 },
+          { nome:"Ouro Duplo", churn:10 }, { nome:"Prata", churn:16 }, { nome:"Usuário", churn:6 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:11 }, { nome:"GO", churn:20 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:71 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:6 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      }
+    }
+  },
 
+  fevereiro: {
+    clipp: {
+      anual: {
+        categoria: [
+          { nome:"Black", churn:19 }, { nome:"Bronze", churn:48 }, { nome:"Diamante", churn:16 },
+          { nome:"Ouro", churn:20 }, { nome:"Ouro Duplo", churn:15 }, { nome:"Prata", churn:22 },
+          { nome:"Usuário", churn:16 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:14 }, { nome:"CLIPP FÁCIL", churn:42 }, { nome:"CLIPP 360", churn:36 },
+          { nome:"CLIPP MEI", churn:44 }, { nome:"CLIPP MEI/CPF", churn:38 }, { nome:"ZWEB", churn:43 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:13 }, { nome:"CLIPP FÁCIL", churn:31 }, { nome:"CLIPP 360", churn:42 },
+          { nome:"CLIPP MEI", churn:100 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:50 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Black", churn:3 }, { nome:"Bronze", churn:21 }, { nome:"Diamante", churn:8 },
+          { nome:"Ouro", churn:4 }, { nome:"Ouro Duplo", churn:11 }, { nome:"Prata", churn:13 },
+          { nome:"Usuário", churn:22 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:2 }, { nome:"CLIPP FÁCIL", churn:22 }, { nome:"CLIPP 360", churn:6 },
+          { nome:"CLIPP MEI", churn:10 }, { nome:"CLIPP MEI/CPF", churn:11 }, { nome:"ZWEB", churn:7 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:30 }, { nome:"CLIPP FÁCIL", churn:0 }, { nome:"CLIPP 360", churn:0 },
+          { nome:"CLIPP MEI", churn:0 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:15 }
+        ]
+      }
+    },
+    small: {
+      anual: {
+        categoria: [
+          { nome:"Bronze", churn:37 }, { nome:"Diamante", churn:22 }, { nome:"Ouro", churn:31 },
+          { nome:"Ouro Duplo", churn:22 }, { nome:"Prata", churn:18 }, { nome:"Usuário", churn:21 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:22 }, { nome:"GO", churn:67 }, { nome:"START", churn:62 }, { nome:"ZWEB", churn:42 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:18 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:100 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Bronze", churn:19 }, { nome:"Diamante", churn:31 }, { nome:"Ouro", churn:20 },
+          { nome:"Ouro Duplo", churn:25 }, { nome:"Prata", churn:10 }, { nome:"Usuário", churn:27 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:12 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:36 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:26 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      }
+    }
+  },
+
+  marco: {
+    clipp: {
+      anual: {
+        categoria: [
+          { nome:"Black", churn:16 }, { nome:"Bronze", churn:36 }, { nome:"Diamante", churn:16 },
+          { nome:"Ouro", churn:20 }, { nome:"Ouro Duplo", churn:19 }, { nome:"Prata", churn:27 },
+          { nome:"Usuário", churn:20 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:16 }, { nome:"CLIPP FÁCIL", churn:40 }, { nome:"CLIPP 360", churn:42 },
+          { nome:"CLIPP MEI", churn:30 }, { nome:"CLIPP MEI/CPF", churn:37 }, { nome:"ZWEB", churn:36 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:19 }, { nome:"CLIPP FÁCIL", churn:20 }, { nome:"CLIPP 360", churn:40 },
+          { nome:"CLIPP MEI", churn:100 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:18 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Black", churn:3 }, { nome:"Bronze", churn:21 }, { nome:"Diamante", churn:8 },
+          { nome:"Ouro", churn:4 }, { nome:"Ouro Duplo", churn:11 }, { nome:"Prata", churn:13 },
+          { nome:"Usuário", churn:22 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:4 }, { nome:"CLIPP FÁCIL", churn:6 }, { nome:"CLIPP 360", churn:11 },
+          { nome:"CLIPP MEI", churn:29 }, { nome:"CLIPP MEI/CPF", churn:23 }, { nome:"ZWEB", churn:12 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:62 }, { nome:"CLIPP FÁCIL", churn:0 }, { nome:"CLIPP 360", churn:0 },
+          { nome:"CLIPP MEI", churn:0 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:18 }
+        ]
+      }
+    },
+    small: {
+      anual: {
+        categoria: [
+          { nome:"Bronze", churn:26 }, { nome:"Diamante", churn:14 }, { nome:"Ouro", churn:17 },
+          { nome:"Ouro Duplo", churn:14 }, { nome:"Prata", churn:20 }, { nome:"Usuário", churn:8 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:16 }, { nome:"GO", churn:33 }, { nome:"START", churn:25 }, { nome:"ZWEB", churn:48 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:9 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Bronze", churn:6 }, { nome:"Diamante", churn:10 }, { nome:"Ouro", churn:22 },
+          { nome:"Ouro Duplo", churn:10 }, { nome:"Prata", churn:10 }, { nome:"Usuário", churn:3 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:7 }, { nome:"GO", churn:15 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:38 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:7 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      }
+    }
+  },
+
+  abril: {
+    clipp: {
+      anual: {
+        categoria: [
+          { nome:"Black", churn:16 }, { nome:"Bronze", churn:51 }, { nome:"Diamante", churn:19 },
+          { nome:"Ouro", churn:24 }, { nome:"Ouro Duplo", churn:20 }, { nome:"Prata", churn:34 },
+          { nome:"Usuário", churn:20 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:17 }, { nome:"CLIPP FÁCIL", churn:44 }, { nome:"CLIPP 360", churn:50 },
+          { nome:"CLIPP MEI", churn:35 }, { nome:"CLIPP MEI/CPF", churn:29 }, { nome:"ZWEB", churn:57 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:16 }, { nome:"CLIPP FÁCIL", churn:40 }, { nome:"CLIPP 360", churn:50 },
+          { nome:"CLIPP MEI", churn:100 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:75 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Black", churn:2 }, { nome:"Bronze", churn:18 }, { nome:"Diamante", churn:6 },
+          { nome:"Ouro", churn:10 }, { nome:"Ouro Duplo", churn:7 }, { nome:"Prata", churn:13 },
+          { nome:"Usuário", churn:24 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:4 }, { nome:"CLIPP FÁCIL", churn:18 }, { nome:"CLIPP 360", churn:7 },
+          { nome:"CLIPP MEI", churn:12 }, { nome:"CLIPP MEI/CPF", churn:4 }, { nome:"ZWEB", churn:12 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:50 }, { nome:"CLIPP FÁCIL", churn:0 }, { nome:"CLIPP 360", churn:0 },
+          { nome:"CLIPP MEI", churn:0 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:23 }
+        ]
+      }
+    },
+    small: {
+      anual: {
+        categoria: [
+          { nome:"Bronze", churn:51 }, { nome:"Diamante", churn:12 }, { nome:"Ouro", churn:13 },
+          { nome:"Ouro Duplo", churn:13 }, { nome:"Prata", churn:40 }, { nome:"Usuário", churn:22 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:19 }, { nome:"GO", churn:40 }, { nome:"START", churn:60 }, { nome:"ZWEB", churn:43 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:20 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:100 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Bronze", churn:50 }, { nome:"Diamante", churn:10 }, { nome:"Ouro", churn:17 },
+          { nome:"Ouro Duplo", churn:36 }, { nome:"Prata", churn:25 }, { nome:"Usuário", churn:25 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:16 }, { nome:"GO", churn:11 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:54 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:25 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      }
+    }
+  },
+
+  maio: {
+    clipp: {
+      anual: {
+        categoria: [
+          { nome:"Black", churn:19 }, { nome:"Bronze", churn:51 }, { nome:"Diamante", churn:20 },
+          { nome:"Ouro", churn:30 }, { nome:"Ouro Duplo", churn:23 }, { nome:"Prata", churn:24 },
+          { nome:"Usuário", churn:25 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:17 }, { nome:"CLIPP FÁCIL", churn:52 }, { nome:"CLIPP 360", churn:49 },
+          { nome:"CLIPP MEI", churn:41 }, { nome:"CLIPP MEI/CPF", churn:53 }, { nome:"ZWEB", churn:41 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:22 }, { nome:"CLIPP FÁCIL", churn:38 }, { nome:"CLIPP 360", churn:33 },
+          { nome:"CLIPP MEI", churn:57 }, { nome:"CLIPP MEI/CPF", churn:100 }, { nome:"ZWEB", churn:71 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Black", churn:2 }, { nome:"Bronze", churn:20 }, { nome:"Diamante", churn:7 },
+          { nome:"Ouro", churn:10 }, { nome:"Ouro Duplo", churn:8 }, { nome:"Prata", churn:18 },
+          { nome:"Usuário", churn:79 }
+        ],
+        produtoRevenda: [
+          { nome:"CLIPP PRO", churn:4 }, { nome:"CLIPP FÁCIL", churn:5 }, { nome:"CLIPP 360", churn:12 },
+          { nome:"CLIPP MEI", churn:41 }, { nome:"CLIPP MEI/CPF", churn:15 }, { nome:"ZWEB", churn:14 }
+        ],
+        produtoUsuario: [
+          { nome:"CLIPP PRO", churn:71 }, { nome:"CLIPP FÁCIL", churn:0 }, { nome:"CLIPP 360", churn:0 },
+          { nome:"CLIPP MEI", churn:0 }, { nome:"CLIPP MEI/CPF", churn:0 }, { nome:"ZWEB", churn:80 }
+        ]
+      }
+    },
+    small: {
+      anual: {
+        categoria: [
+          { nome:"Bronze", churn:52 }, { nome:"Diamante", churn:21 }, { nome:"Ouro", churn:25 },
+          { nome:"Ouro Duplo", churn:15 }, { nome:"Prata", churn:28 }, { nome:"Usuário", churn:18 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:22 }, { nome:"GO", churn:50 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:61 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:17 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:100 }
+        ]
+      },
+      mensal: {
+        categoria: [
+          { nome:"Bronze", churn:36 }, { nome:"Diamante", churn:14 }, { nome:"Ouro", churn:10 },
+          { nome:"Ouro Duplo", churn:30 }, { nome:"Prata", churn:19 }, { nome:"Usuário", churn:16 }
+        ],
+        produtoRevenda: [
+          { nome:"COMMERCE", churn:12 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:39 }
+        ],
+        produtoUsuario: [
+          { nome:"COMMERCE", churn:10 }, { nome:"GO", churn:0 }, { nome:"START", churn:0 }, { nome:"ZWEB", churn:0 }
+        ]
+      }
+    }
+  }
+};
 let charts = {};
 
 const brl = v => (v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
