@@ -291,191 +291,407 @@
 .module-panel.active{
   display:block;
 }
+  
+    .module-hero {
+      padding:26px;
+      margin-bottom:24px;
+    }
+
+    .module-title-row {
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .module-controls {
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:end;
+      margin-top:18px;
+    }
+
+    .control-group {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .control-group label {
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .churn-table-wrap {
+      overflow-x:auto;
+    }
+
+    .top-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      padding:24px;
+      margin-bottom:24px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#38bdf8,#a855f7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:24px;
+      font-weight:800;
+    }
+
+    .brand h2{
+      margin:0;
+      font-size:24px;
+    }
+
+    .brand span{
+      color:#94a3b8;
+      font-size:13px;
+    }
+
+    .main-nav{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .nav-btn{
+      border:none;
+      padding:12px 18px;
+      border-radius:999px;
+      cursor:pointer;
+      background:rgba(255,255,255,.05);
+      color:#94a3b8;
+      transition:.2s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active{
+      background:rgba(56,189,248,.15);
+      color:white;
+      border:1px solid rgba(56,189,248,.35);
+    }
+
+    .module-panel{
+      display:none;
+    }
+
+    .module-panel.active{
+      display:block;
+    }
+
+    @media(max-width:700px){
+      .top-header{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .main-nav{
+        width:100%;
+      }
+
+      .nav-btn{
+        flex:1;
+      }
+    }
+
   </style>
 </head>
 
 <body>
 <main class="dashboard">
+
   <div class="top-header glass">
+    <div class="brand">
+      <div class="logo">P</div>
+      <div>
+        <h2>POS Performance</h2>
+        <span>Inteligência Comercial e Indicadores Estratégicos</span>
+      </div>
+    </div>
 
-  <div class="brand">
-    <div class="logo">P</div>
-
-    <div>
-      <h2>POS Performance</h2>
-      <span>Inteligência Comercial e Indicadores Estratégicos</span>
+    <div class="main-nav">
+      <button class="nav-btn active" data-module="modulo-vendas">📈 Vendas</button>
+      <button class="nav-btn" data-module="modulo-churn">📉 Churn</button>
+      <button class="nav-btn" data-module="modulo-produtos">📦 Vendas por Produto</button>
     </div>
   </div>
 
-  <div class="main-nav">
-    <button class="nav-btn active" data-module="modulo-vendas">📈 Vendas</button>
-    <button class="nav-btn" data-module="modulo-churn">📉 Churn</button>
-    <button class="nav-btn" data-module="modulo-produtos">📦 Vendas por Produto</button>
+  <div id="modulo-vendas" class="module-panel active">
+    <header>
+      <section class="hero glass">
+        <div class="badge">✦ Inteligência Estratégica Comercial</div>
+        <h1 id="pageTitle">Resultado Maio 2026</h1>
+        <p class="subtitle">
+          Dashboard executivo com seleção mensal, visão consolidada de metas, realizado, categorias, renovações, vendas, campanha e ativações.
+        </p>
+
+        <div class="filters">
+          <label for="monthSelect">Selecionar mês</label>
+          <select id="monthSelect">
+            <option value="janeiro">Janeiro</option>
+            <option value="fevereiro">Fevereiro</option>
+            <option value="marco">Março</option>
+            <option value="abril">Abril</option>
+            <option value="maio" selected>Maio</option>
+            <option value="junho">Junho</option>
+            <option value="julho">Julho</option>
+            <option value="agosto">Agosto</option>
+            <option value="setembro">Setembro</option>
+            <option value="outubro">Outubro</option>
+            <option value="novembro">Novembro</option>
+            <option value="dezembro">Dezembro</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="executive-note glass">
+        <h3>Leitura executiva</h3>
+        <p id="executiveSummary" class="subtitle"></p>
+      </section>
+    </header>
+
+    <nav class="tabs-card glass" aria-label="Atalhos das seções">
+      <button class="tab-btn active" data-tab="executivo">Executivo</button>
+      <button class="tab-btn" data-tab="renovacoes">Renovações</button>
+      <button class="tab-btn" data-tab="vendas">Vendas</button>
+      <button class="tab-btn" data-tab="vamo">Vamo Junto</button>
+      <button class="tab-btn" data-tab="ativacoes">Ativações</button>
+    </nav>
+
+    <section id="executivo" class="tab-panel active">
+      <section class="kpis">
+        <div class="card glass">
+          <div class="label">Meta Geral</div>
+          <div class="value" id="metaGeral"></div>
+        </div>
+
+        <div class="card glass">
+          <div class="label">Total Realizado</div>
+          <div class="value" id="totalRealizado"></div>
+        </div>
+
+        <div class="card glass">
+          <div class="label">Atingimento Geral</div>
+          <div class="value" id="atingimentoGeral"></div>
+          <span id="statusGeral" class="status"></span>
+        </div>
+
+        <div class="card glass">
+          <div class="label">Diferença vs Meta</div>
+          <div class="value" id="diferencaGeral"></div>
+          <div class="delta" id="diferencaPct"></div>
+        </div>
+      </section>
+
+      <section class="chart-card glass section">
+        <h2>Resultado por Categoria</h2>
+        <p class="insight">Distribuição do realizado por categoria comercial.</p>
+        <canvas id="categoriasChart"></canvas>
+      </section>
+
+      <section class="grid">
+        <div class="chart-card glass">
+          <h2>Meta vs Realizado por Bloco</h2>
+          <p class="insight">Comparativo executivo dos principais blocos de meta.</p>
+          <canvas id="barBlocos"></canvas>
+        </div>
+
+        <div class="chart-card glass">
+          <h2>Gauge de Atingimento Geral</h2>
+          <p class="insight">Resultado consolidado da operação no mês.</p>
+          <canvas id="gaugeGeral"></canvas>
+        </div>
+      </section>
+
+      <section class="grid-3">
+        <div class="card glass">
+          <div class="label">Meta CLIPP</div>
+          <div class="value" id="metaClipp"></div>
+          <div class="delta">Participação principal da meta geral</div>
+        </div>
+
+        <div class="card glass">
+          <div class="label">Meta SMALL</div>
+          <div class="value" id="metaSmall"></div>
+          <div class="delta">Bloco complementar de receita</div>
+        </div>
+
+        <div class="card glass">
+          <div class="label">Ativações Totais</div>
+          <div class="value" id="ativacoesTotais"></div>
+          <span id="statusAtivacoes" class="status"></span>
+        </div>
+      </section>
+    </section>
+
+    <section id="renovacoes" class="tab-panel">
+      <section class="table-card glass section">
+        <h2>Renovações e Mensalidades</h2>
+        <p class="insight">Detalhamento do bloco de renovações por linha e origem.</p>
+        <table id="renovacoesTable"></table>
+      </section>
+    </section>
+
+    <section id="vendas" class="tab-panel">
+      <section class="table-card glass section">
+        <h2>Vendas por Origem</h2>
+        <p class="insight">Detalhamento das vendas Full, Plugin, Usuário e Hunter.</p>
+        <table id="vendasTable"></table>
+      </section>
+    </section>
+
+    <section id="vamo" class="tab-panel">
+      <section class="table-card glass section">
+        <h2>Campanha Vamo Junto</h2>
+        <p class="insight">Resultado mensal da campanha por linha.</p>
+        <table id="vamoJuntoTable"></table>
+      </section>
+    </section>
+
+    <section id="ativacoes" class="tab-panel">
+      <section class="chart-card glass section">
+        <h2>Ativações</h2>
+        <p class="insight">Volume realizado versus meta de ativações por linha.</p>
+        <canvas id="ativacoesChart"></canvas>
+      </section>
+
+      <section class="table-card glass section">
+        <h2>Ativações por Linha</h2>
+        <p class="insight">Acompanhamento de revenda, usuário, total, meta e falta/sobra.</p>
+        <table id="ativacoesTable"></table>
+      </section>
+    </section>
   </div>
 
- <div id="modulo-vendas" class="module-panel active">
+  <div id="modulo-churn" class="module-panel">
+    <section class="module-hero glass">
+      <div class="module-title-row">
+        <div>
+          <div class="badge">✦ Inteligência de Retenção</div>
+          <h1>Churn</h1>
+          <p class="subtitle">
+            Análise de churn por linha, categoria, produto, modalidade anual e mensal.
+          </p>
+        </div>
+      </div>
 
-<header>
-    <section class="hero glass">
-      <div class="badge">✦ Inteligência Estratégica Comercial</div>
-      <h1 id="pageTitle">Resultado Maio 2026</h1>
-      <p class="subtitle">
-        Dashboard executivo com seleção mensal, visão consolidada de metas, realizado, categorias, renovações, vendas, campanha e ativações.
-      </p>
+      <div class="module-controls">
+        <div class="control-group">
+          <label for="churnMonthSelect">Mês</label>
+          <select id="churnMonthSelect">
+            <option value="janeiro">Janeiro</option>
+            <option value="fevereiro">Fevereiro</option>
+            <option value="marco">Março</option>
+            <option value="abril">Abril</option>
+            <option value="maio" selected>Maio</option>
+          </select>
+        </div>
 
-      <div class="filters">
-        <label for="monthSelect">Selecionar mês</label>
-        <select id="monthSelect">
-          <option value="janeiro">Janeiro</option>
-          <option value="fevereiro">Fevereiro</option>
-          <option value="marco">Março</option>
-          <option value="abril">Abril</option>
-          <option value="maio" selected>Maio</option>
-          <option value="junho">Junho</option>
-          <option value="julho">Julho</option>
-          <option value="agosto">Agosto</option>
-          <option value="setembro">Setembro</option>
-          <option value="outubro">Outubro</option>
-          <option value="novembro">Novembro</option>
-          <option value="dezembro">Dezembro</option>
-        </select>
+        <div class="control-group">
+          <label for="churnLineSelect">Linha</label>
+          <select id="churnLineSelect">
+            <option value="clipp" selected>CLIPP</option>
+            <option value="small">SMALL</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="churnPeriodSelect">Modalidade</label>
+          <select id="churnPeriodSelect">
+            <option value="anual" selected>Anual</option>
+            <option value="mensal">Mensal</option>
+          </select>
+        </div>
       </div>
     </section>
 
-    <section class="executive-note glass">
-      <h3>Leitura executiva</h3>
-      <p id="executiveSummary" class="subtitle"></p>
-    </section>
-  </header>
-
-  <nav class="tabs-card glass" aria-label="Atalhos das seções">
-    <button class="tab-btn active" data-tab="executivo">Executivo</button>
-    <button class="tab-btn" data-tab="renovacoes">Renovações</button>
-    <button class="tab-btn" data-tab="vendas">Vendas</button>
-    <button class="tab-btn" data-tab="vamo">Vamo Junto</button>
-    <button class="tab-btn" data-tab="ativacoes">Ativações</button>
-  </nav>
-
-  <section id="executivo" class="tab-panel active">
     <section class="kpis">
       <div class="card glass">
-        <div class="label">Meta Geral</div>
-        <div class="value" id="metaGeral"></div>
+        <div class="label">Churn médio por categoria</div>
+        <div class="value" id="churnMediaCategoria"></div>
       </div>
 
       <div class="card glass">
-        <div class="label">Total Realizado</div>
-        <div class="value" id="totalRealizado"></div>
+        <div class="label">Categoria crítica</div>
+        <div class="value" id="churnCategoriaCritica"></div>
+        <div class="delta" id="churnCategoriaCriticaValor"></div>
       </div>
 
       <div class="card glass">
-        <div class="label">Atingimento Geral</div>
-        <div class="value" id="atingimentoGeral"></div>
-        <span id="statusGeral" class="status"></span>
+        <div class="label">Produto crítico Revenda</div>
+        <div class="value" id="churnProdutoCriticoRevenda"></div>
+        <div class="delta" id="churnProdutoCriticoRevendaValor"></div>
       </div>
 
       <div class="card glass">
-        <div class="label">Diferença vs Meta</div>
-        <div class="value" id="diferencaGeral"></div>
-        <div class="delta" id="diferencaPct"></div>
+        <div class="label">Produto crítico Usuário</div>
+        <div class="value" id="churnProdutoCriticoUsuario"></div>
+        <div class="delta" id="churnProdutoCriticoUsuarioValor"></div>
       </div>
-    </section>
-
-    <section class="chart-card glass section">
-      <h2>Resultado por Categoria</h2>
-      <p class="insight">Distribuição do realizado por categoria comercial.</p>
-      <canvas id="categoriasChart"></canvas>
     </section>
 
     <section class="grid">
       <div class="chart-card glass">
-        <h2>Meta vs Realizado por Bloco</h2>
-        <p class="insight">Comparativo executivo dos principais blocos de meta.</p>
-        <canvas id="barBlocos"></canvas>
+        <h2>Churn por Categoria</h2>
+        <p class="insight">Percentual de churn por categoria na linha e modalidade selecionadas.</p>
+        <canvas id="churnCategoriaChart"></canvas>
       </div>
 
       <div class="chart-card glass">
-        <h2>Gauge de Atingimento Geral</h2>
-        <p class="insight">Resultado consolidado da operação no mês.</p>
-        <canvas id="gaugeGeral"></canvas>
+        <h2>Evolução Mensal do Churn Médio</h2>
+        <p class="insight">Média simples do churn por categoria de janeiro a maio.</p>
+        <canvas id="churnEvolucaoChart"></canvas>
       </div>
     </section>
 
-    <section class="grid-3">
-      <div class="card glass">
-        <div class="label">Meta CLIPP</div>
-        <div class="value" id="metaClipp"></div>
-        <div class="delta">Participação principal da meta geral</div>
+    <section class="grid">
+      <div class="chart-card glass">
+        <h2>Churn por Produto | Revenda</h2>
+        <p class="insight">Comparativo por produto na base de revendas.</p>
+        <canvas id="churnProdutoRevendaChart"></canvas>
       </div>
 
-      <div class="card glass">
-        <div class="label">Meta SMALL</div>
-        <div class="value" id="metaSmall"></div>
-        <div class="delta">Bloco complementar de receita</div>
-      </div>
-
-      <div class="card glass">
-        <div class="label">Ativações Totais</div>
-        <div class="value" id="ativacoesTotais"></div>
-        <span id="statusAtivacoes" class="status"></span>
+      <div class="chart-card glass">
+        <h2>Churn por Produto | Usuário</h2>
+        <p class="insight">Comparativo por produto na base de usuários.</p>
+        <canvas id="churnProdutoUsuarioChart"></canvas>
       </div>
     </section>
 
-  <section id="renovacoes" class="tab-panel">
-    <section class="table-card glass section">
-      <h2>Renovações e Mensalidades</h2>
-      <p class="insight">Detalhamento do bloco de renovações por linha e origem.</p>
-      <table id="renovacoesTable"></table>
+    <section class="table-card glass section churn-table-wrap">
+      <h2>Tabela Analítica de Churn</h2>
+      <p class="insight">Visão consolidada de categorias e produtos do mês selecionado.</p>
+      <table id="churnTable"></table>
     </section>
-  </section>
-
-  <section id="vendas" class="tab-panel">
-    <section class="table-card glass section">
-      <h2>Vendas por Origem</h2>
-      <p class="insight">Detalhamento das vendas Full, Plugin, Usuário e Hunter.</p>
-      <table id="vendasTable"></table>
-    </section>
-  </section>
-
-  <section id="vamo" class="tab-panel">
-    <section class="table-card glass section">
-      <h2>Campanha Vamo Junto</h2>
-      <p class="insight">Resultado mensal da campanha por linha.</p>
-      <table id="vamoJuntoTable"></table>
-    </section>
-  </section>
-
-  <section id="ativacoes" class="tab-panel">
-    <section class="chart-card glass section">
-      <h2>Ativações</h2>
-      <p class="insight">Volume realizado versus meta de ativações por linha.</p>
-      <canvas id="ativacoesChart"></canvas>
-    </section>
-
-    <section class="table-card glass section">
-      <h2>Ativações por Linha</h2>
-      <p class="insight">Acompanhamento de revenda, usuário, total, meta e falta/sobra.</p>
-      <table id="ativacoesTable"></table>
-    </section>
-  </section>
   </div>
-    <div id="modulo-churn" class="module-panel">
-  <section class="table-card glass section">
-    <h2>Churn</h2>
-    <p class="insight">
-      Área em construção para análise de cancelamentos, perdas, retenção e recuperação de clientes.
-    </p>
-  </section>
-</div>
 
-<div id="modulo-produtos" class="module-panel">
-  <section class="table-card glass section">
-    <h2>Vendas por Produto</h2>
-    <p class="insight">
-      Área em construção para análise de vendas por produto, linha, categoria e origem.
-    </p>
-  </section>
-</div>
+  <div id="modulo-produtos" class="module-panel">
+    <section class="table-card glass section">
+      <h2>Vendas por Produto</h2>
+      <p class="insight">
+        Área em construção para análise de vendas por produto, linha, categoria e origem.
+      </p>
+    </section>
+  </div>
+
 </main>
 
 <script>
@@ -1218,7 +1434,7 @@ function renderTables(mes){
 }
 
 function renderEmptyCharts(){
-  ["categoriasChart","barBlocos","gaugeGeral","ativacoesChart"].forEach(id => {
+  ["categoriasChart","barBlocos","gaugeGeral","rankingOrigem","ativacoesChart"].forEach(id => {
     const ctx = document.getElementById(id);
     charts[id] = new Chart(ctx, {
       type:"bar",
@@ -1325,35 +1541,234 @@ function renderCharts(mes, atingimento){
   });
 }
 
+
+function destroySpecificCharts(ids){
+  ids.forEach(id => {
+    if (charts[id]) {
+      charts[id].destroy();
+      delete charts[id];
+    }
+  });
+}
+
+function mediaChurn(data){
+  if (!data || !data.length) return 0;
+  return data.reduce((sum, item) => sum + (item.churn || 0), 0) / data.length;
+}
+
+function maiorChurn(data){
+  if (!data || !data.length) return { nome:"-", churn:0 };
+  return [...data].sort((a,b) => (b.churn || 0) - (a.churn || 0))[0];
+}
+
+function churnPct(v){
+  return `${(v || 0).toFixed(2).replace(".", ",")}%`;
+}
+
+function renderChurn(){
+  const month = document.getElementById("churnMonthSelect").value;
+  const line = document.getElementById("churnLineSelect").value;
+  const period = document.getElementById("churnPeriodSelect").value;
+
+  const dataset = churnData?.[month]?.[line]?.[period];
+
+  destroySpecificCharts([
+    "churnCategoriaChart",
+    "churnEvolucaoChart",
+    "churnProdutoRevendaChart",
+    "churnProdutoUsuarioChart"
+  ]);
+
+  if (!dataset) return;
+
+  const categoriaCritica = maiorChurn(dataset.categoria);
+  const produtoCriticoRevenda = maiorChurn(dataset.produtoRevenda);
+  const produtoCriticoUsuario = maiorChurn(dataset.produtoUsuario);
+
+  document.getElementById("churnMediaCategoria").textContent = churnPct(mediaChurn(dataset.categoria));
+  document.getElementById("churnCategoriaCritica").textContent = categoriaCritica.nome;
+  document.getElementById("churnCategoriaCriticaValor").textContent = `${churnPct(categoriaCritica.churn)} de churn`;
+
+  document.getElementById("churnProdutoCriticoRevenda").textContent = produtoCriticoRevenda.nome;
+  document.getElementById("churnProdutoCriticoRevendaValor").textContent = `${churnPct(produtoCriticoRevenda.churn)} de churn`;
+
+  document.getElementById("churnProdutoCriticoUsuario").textContent = produtoCriticoUsuario.nome;
+  document.getElementById("churnProdutoCriticoUsuarioValor").textContent = `${churnPct(produtoCriticoUsuario.churn)} de churn`;
+
+  charts.churnCategoriaChart = new Chart(document.getElementById("churnCategoriaChart"), {
+    type:"bar",
+    data:{
+      labels:dataset.categoria.map(item => item.nome),
+      datasets:[{
+        label:"Churn",
+        data:dataset.categoria.map(item => item.churn),
+        backgroundColor:"rgba(239,68,68,.50)",
+        borderColor:"#ef4444",
+        borderWidth:1,
+        borderRadius:12
+      }]
+    },
+    options:{
+      ...chartBaseOptions(),
+      plugins:{
+        ...chartBaseOptions().plugins,
+        tooltip:{
+          ...chartBaseOptions().plugins.tooltip,
+          callbacks:{ label: context => `Churn: ${churnPct(context.raw)}` }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" } },
+        y:{ ticks:{ color:"#94a3b8", callback:value => `${value}%` }, grid:{ color:"rgba(255,255,255,.06)" } }
+      }
+    }
+  });
+
+  const meses = ["janeiro","fevereiro","marco","abril","maio"];
+  const nomesMeses = ["Jan","Fev","Mar","Abr","Mai"];
+  const evolucao = meses.map(m => {
+    const base = churnData?.[m]?.[line]?.[period]?.categoria || [];
+    return mediaChurn(base);
+  });
+
+  charts.churnEvolucaoChart = new Chart(document.getElementById("churnEvolucaoChart"), {
+    type:"line",
+    data:{
+      labels:nomesMeses,
+      datasets:[{
+        label:"Churn médio",
+        data:evolucao,
+        borderColor:"#38bdf8",
+        backgroundColor:"rgba(56,189,248,.16)",
+        tension:.35,
+        fill:true,
+        pointRadius:5
+      }]
+    },
+    options:{
+      ...chartBaseOptions(),
+      plugins:{
+        ...chartBaseOptions().plugins,
+        tooltip:{
+          ...chartBaseOptions().plugins.tooltip,
+          callbacks:{ label: context => `Churn médio: ${churnPct(context.raw)}` }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" } },
+        y:{ ticks:{ color:"#94a3b8", callback:value => `${value}%` }, grid:{ color:"rgba(255,255,255,.06)" } }
+      }
+    }
+  });
+
+  charts.churnProdutoRevendaChart = new Chart(document.getElementById("churnProdutoRevendaChart"), {
+    type:"bar",
+    data:{
+      labels:dataset.produtoRevenda.map(item => item.nome),
+      datasets:[{
+        label:"Churn Revenda",
+        data:dataset.produtoRevenda.map(item => item.churn),
+        backgroundColor:"rgba(168,85,247,.50)",
+        borderColor:"#a855f7",
+        borderWidth:1,
+        borderRadius:12
+      }]
+    },
+    options:{
+      ...chartBaseOptions(),
+      plugins:{
+        ...chartBaseOptions().plugins,
+        tooltip:{
+          ...chartBaseOptions().plugins.tooltip,
+          callbacks:{ label: context => `Churn: ${churnPct(context.raw)}` }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" } },
+        y:{ ticks:{ color:"#94a3b8", callback:value => `${value}%` }, grid:{ color:"rgba(255,255,255,.06)" } }
+      }
+    }
+  });
+
+  charts.churnProdutoUsuarioChart = new Chart(document.getElementById("churnProdutoUsuarioChart"), {
+    type:"bar",
+    data:{
+      labels:dataset.produtoUsuario.map(item => item.nome),
+      datasets:[{
+        label:"Churn Usuário",
+        data:dataset.produtoUsuario.map(item => item.churn),
+        backgroundColor:"rgba(250,204,21,.44)",
+        borderColor:"#facc15",
+        borderWidth:1,
+        borderRadius:12
+      }]
+    },
+    options:{
+      ...chartBaseOptions(),
+      plugins:{
+        ...chartBaseOptions().plugins,
+        tooltip:{
+          ...chartBaseOptions().plugins.tooltip,
+          callbacks:{ label: context => `Churn: ${churnPct(context.raw)}` }
+        }
+      },
+      scales:{
+        x:{ ticks:{ color:"#94a3b8" }, grid:{ color:"rgba(255,255,255,.05)" } },
+        y:{ ticks:{ color:"#94a3b8", callback:value => `${value}%` }, grid:{ color:"rgba(255,255,255,.06)" } }
+      }
+    }
+  });
+
+  const tableRows = [
+    ...dataset.categoria.map(item => ({ grupo:"Categoria", nome:item.nome, churn:item.churn })),
+    ...dataset.produtoRevenda.map(item => ({ grupo:"Produto | Revenda", nome:item.nome, churn:item.churn })),
+    ...dataset.produtoUsuario.map(item => ({ grupo:"Produto | Usuário", nome:item.nome, churn:item.churn }))
+  ];
+
+  makeTable("churnTable", [
+    { label:"Grupo", render:r => r.grupo },
+    { label:"Nome", render:r => r.nome },
+    { label:"Churn", render:r => churnPct(r.churn) },
+    { label:"Classificação", render:r => {
+      const cls = r.churn >= 50 ? "red" : r.churn >= 25 ? "yellow" : "green";
+      const txt = r.churn >= 50 ? "Crítico" : r.churn >= 25 ? "Atenção" : "Controlado";
+      return `<span class="pill ${cls}">${txt}</span>`;
+    }}
+  ], tableRows);
+}
+
+
 document.getElementById("monthSelect").addEventListener("change", e => {
   renderDashboard(e.target.value);
 });
 document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    const targetId = btn.getAttribute("data-module");
-
-    document.querySelectorAll(".nav-btn").forEach(b => {
-      b.classList.remove("active");
-    });
-
-    document.querySelectorAll(".module-panel").forEach(panel => {
-      panel.classList.remove("active");
-      panel.style.display = "none";
-    });
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".module-panel").forEach(p => p.classList.remove("active"));
 
     btn.classList.add("active");
 
-    const targetPanel = document.getElementById(targetId);
+    const module = document.getElementById(btn.dataset.module);
+    if (module) {
+      module.classList.add("active");
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+  });
+});
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-    if (targetPanel) {
-      targetPanel.classList.add("active");
-      targetPanel.style.display = "block";
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    const section = document.getElementById(btn.dataset.tab);
+    if (section) {
+      section.scrollIntoView({ behavior:"smooth", block:"start" });
     }
   });
 });
 
 renderDashboard("maio");
+renderChurn();
 </script>
 </body>
 </html>
