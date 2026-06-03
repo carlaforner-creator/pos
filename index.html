@@ -412,6 +412,37 @@
       }
     }
 
+    #backToTop{
+      position:fixed;
+      bottom:25px;
+      right:25px;
+      width:55px;
+      height:55px;
+      border:none;
+      border-radius:50%;
+      background:rgba(56,189,248,.85);
+      backdrop-filter:blur(12px);
+      color:white;
+      font-size:24px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,.35);
+      opacity:0;
+      visibility:hidden;
+      transition:all .3s ease;
+      z-index:9999;
+    }
+
+    #backToTop:hover{
+      transform:translateY(-4px);
+      background:#38bdf8;
+    }
+
+    #backToTop.show{
+      opacity:1;
+      visibility:visible;
+    }
+
   </style>
 </head>
 
@@ -691,6 +722,10 @@
       </p>
     </section>
   </div>
+
+  <button id="backToTop" title="Voltar ao topo" aria-label="Voltar ao topo">
+    ↑
+  </button>
 
 </main>
 
@@ -1434,7 +1469,7 @@ function renderTables(mes){
 }
 
 function renderEmptyCharts(){
-  ["categoriasChart","barBlocos","gaugeGeral","rankingOrigem","ativacoesChart"].forEach(id => {
+  ["categoriasChart","barBlocos","gaugeGeral","ativacoesChart"].forEach(id => {
     const ctx = document.getElementById(id);
     charts[id] = new Chart(ctx, {
       type:"bar",
@@ -1764,6 +1799,28 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (section) {
       section.scrollIntoView({ behavior:"smooth", block:"start" });
     }
+  });
+});
+
+
+document.getElementById("churnMonthSelect")?.addEventListener("change", renderChurn);
+document.getElementById("churnLineSelect")?.addEventListener("change", renderChurn);
+document.getElementById("churnPeriodSelect")?.addEventListener("change", renderChurn);
+
+const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 400) {
+    backToTop.classList.add("show");
+  } else {
+    backToTop.classList.remove("show");
+  }
+});
+
+backToTop.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   });
 });
 
